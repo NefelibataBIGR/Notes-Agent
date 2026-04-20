@@ -1,0 +1,43 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts (PyInstaller / release outputs)
+build/
+build_tmp/
+dist/
+dist_tmp/
+release/
+*.zip
+*.exe
+
+# Runtime data / logs
+logs/
+data/
+idx_cancel_test_*/
+tmp_cancel_test_*/
+
+# Local environment files
+.env
+.env.*
