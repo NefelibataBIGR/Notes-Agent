@@ -39,8 +39,11 @@ class NoteAgent:
         default_dir = self.config.db_path.parent.resolve()
         if path_text and path_text.strip():
             candidate = Path(path_text.strip()).expanduser().resolve()
-            candidate.mkdir(parents=True, exist_ok=True)
-            if candidate.exists() and candidate.is_dir():
+            try:
+                candidate.mkdir(parents=True, exist_ok=True)
+            except OSError:
+                candidate = None
+            if candidate is not None and candidate.exists() and candidate.is_dir():
                 return candidate
         default_dir.mkdir(parents=True, exist_ok=True)
         return default_dir
@@ -122,7 +125,15 @@ class NoteAgent:
         if progress_callback is not None:
             progress_callback(2, "准备问答")
 
-        client = self._build_client_if_enabled()
+        try:
+            client = self._build_client_if_enabled()
+        except ValueError as exc:
+            if self.settings.use_llm_rag:
+                raise ValueError(
+                    "已启用 LLM+RAG，但配置不完整。请在“设置”中填写 API Key/模型名，"
+                    "或关闭 LLM 模式后重试。"
+                ) from exc
+            raise
         if progress_callback is not None:
             progress_callback(12, "加载模型配置")
         query_embedding: list[float] | None = None
